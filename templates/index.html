@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
+
+  {% for item in sorted_array%}
+  <p> {{ item }} </p>
+  {% endfor %}
+
+
+{% endblock %}
