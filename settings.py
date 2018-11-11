@@ -5,8 +5,7 @@ CLIENT_ID= os.environ['SPOTIFY_CLIENT_ID']
 CLIENT_SECRET= os.environ['SPOTIFY_CLIENT_SECRET']
 REDIRECT_URI= os.environ['SPOTIFY_REDIRECT_URI']
 
-SCOPE = 'playlist-modify-public playlist-modify-private'
-# scope = 'user-top-read user-library-read user-follow-read playlist-modify-public'
+SCOPE = 'user-top-read user-library-read user-follow-read playlist-modify-public'
 
 # Spotify URL
 SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize'

@@ -4,9 +4,9 @@
 
 {% block content %}
 
-  {% for item in sorted_array%}
-  <p> {{ item }} </p>
-  {% endfor %}
-
+    <form action = '/spotify-auth'>
+    What is your mood? <input type="text" name="mood">
+    <input type="submit">
+    </form>
 
 {% endblock %}

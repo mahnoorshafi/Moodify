@@ -8,3 +8,4 @@ env/
 # Others
 secrets.sh
 .DS_Store
+start_server
