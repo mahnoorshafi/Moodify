@@ -30,10 +30,12 @@ def callback():
 
     response_data = spotify.get_tokens()
     auth_header = spotify.access_api(response_data)
-    top_artists = mood.get_users_top_artists(auth_header, 50)
+    top_artists = mood.get_top_artists(auth_header, 20)
     artists = mood.get_related_artists(auth_header, top_artists)
     top_tracks = mood.get_top_tracks(auth_header, artists)
+    cluster = mood.cluster_ids(top_tracks)
+    select = mood.select_tracks(auth_header, cluster, 1.00)
 
-    return render_template('results.html', 
-                            top_tracks = top_tracks)
+    return render_template('results.html',
+                             select = select)
 
