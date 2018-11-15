@@ -54,6 +54,15 @@ def access_api(response_data):
     auth_header = {'Authorization': 'Bearer {}'.format(response_data['access_token'])}
     return auth_header
 
+def get_user_id(auth_header):
+    """ Return users spotify id to add to database """ 
+
+    request = f'{SPOTIFY_API_URL}/me'
+    user_info_data = requests.get(request, headers=auth_header).json()
+    user_id = user_info_data['id']
+
+    return user_id
+
 
 
 

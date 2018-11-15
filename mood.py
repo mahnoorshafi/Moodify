@@ -9,7 +9,7 @@ def get_top_artists(auth_header, num_entities):
 
     artists = []
 
-    term = ['long_term', 'short_term']
+    term = ['long_term']
 
     for length in term:
         request = f'{SPOTIFY_API_URL}/me/top/artists?time_range={length}&limit={num_entities}'
@@ -92,29 +92,50 @@ def select_tracks(auth_header, clustered_tracks, mood):
     #     for track in audio_features:
     #         if mood <= 0.10:
     #             if (track['danceability'] <= 0.10) and (track['energy'] <= 0.20) and (track['valence'] <= 0.10):
-    #                 selected_tracks.append(track['id'])
+    #                 selected_tracks.append(track['uri'])
     #         elif mood <= 0.25:
     #             if (0.10 < track['danceability'] <= 0.25) and (0.20 < track['energy'] <= 0.30) and (0.10 < track['valence'] <= 0.20):
-    #                 selected_tracks.append(track['id'])
+    #                 selected_tracks.append(track['uri'])
     #         elif mood <= 0.50:
     #             if (0.25 < track['danceability'] <= 0.05) and (0.30 < track['energy'] <= 0.40) and (0.20 < track['valence'] <= 0.40):
-    #                 selected_tracks.append(track['id'])
+    #                 selected_tracks.append(track['uri'])
     #         elif mood <= 0.75:
     #             if (0.50 < track['danceability'] <= 0.75) and (0.40 < track['energy'] <= 0.50) and (0.50 < track['valence']):
-    #                 selected_tracks.append(track['id'])
+    #                 selected_tracks.append(track['uri'])
     #         elif mood <= 0.90:
     #             if (0.75 < track['danceability'] <= 0.9) and (0.50 < track['energy'] <= 0.70) and (0.50 < track['valence']):
-    #                 selected_tracks.append(track['id'])
+    #                 selected_tracks.append(track['uri'])
     #         elif mood <= 1.00:
     #             if (track['danceability'] > 0.9) and (track['energy'] > 0.7) and (0.50 < track['valence']):
-    #                 selected_tracks.append(track['id'])
+    #                 selected_tracks.append(track['uri'])
 
     # return selected_tracks
 
-def create_playlist(auth_header, selected_tracks):
-    """ Creates playlist based on mood """
+def create_playlist(auth_header, user_id, selected_tracks, mood):
+    """ Creates playlist based on mood with selected tracks """
 
-    pass
+    data = { 
+        'name' : f'Mood #{mood}',
+        'description': 'Mood generated playlist'
+        }
+
+    playlist_request = f'{SPOTIFY_API_URL}/users/{user_id}/playlists'
+    playlist_data = requests.get(playlist_request, data = data, headers =auth_header)
+    playlist_id = playlist_data['id']
+
+    track_uris = '%2C'.join(selected_tracks)
+    add_tracks = f'{SPOTIFY_API_URL}playlists/{playlist_id}/tracks?uris={track_uris}'
+
+    return playlist_data['href']
+
+
+
+
+
+
+
+
+    
     
 
 
