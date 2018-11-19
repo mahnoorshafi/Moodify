@@ -17,7 +17,13 @@ app.jinja_env.undefinded = StrictUndefined
 def homepage():
     """ Render welcome page with login button """
 
-    return render_template('homepage.html')
+    app.logger.info(session)
+
+    if session.get('access_token'):
+        return render_template('mood.html')
+        
+    else:
+        return render_template('homepage.html')
 
 @app.route('/spotify-auth')
 def authorization():
@@ -27,16 +33,19 @@ def authorization():
     return redirect(auth_url)
 
 @app.route('/callback')
-def get_user_tokens():
-    """ Get user's authorization header and artists"""
+def get_user_mood():
+    """ Get user's current mood"""
 
+    # get authorization token from spotify
     response_data = spotify.get_tokens()
-    auth_header = spotify.access_api(response_data)
+    auth_header = spotify.get_auth_header(response_data['access_token'])
 
     user_id = spotify.get_user_id(auth_header)
 
     session['user'] = user_id 
     session['access_token'] = response_data['access_token']
+
+    app.logger.info(session)
 
     user_exist = db.session.query(exists().where(User.id == user_id))
 
@@ -45,8 +54,10 @@ def get_user_tokens():
         db.session.add(new_user)
         db.session.commit()
 
-    top_artists = mood.get_top_artists(auth_header, 20)
+    top_artists = mood.get_top_artists(auth_header, 50)
     artists = mood.get_related_artists(auth_header, top_artists)
+
+    session['artists'] = artists
 
     app.logger.info(artists)
 
@@ -56,13 +67,24 @@ def get_user_tokens():
 def playlist():
     """ Take user to spotify web player with created playlist """
 
-    response_data = spotify.get_tokens()
-    auth_header = spotify.access_api(response_data)
+    user_mood = request.args.get('mood')
 
-    top_tracks = mood.get_top_tracks(auth_header, artists)
-    cluster = mood.cluster_ids(top_tracks)
-    select = mood.select_tracks(auth_header, cluster, 1.00)
+    user_artists = session.get('artists')
+    user = session.get('user')
 
-    return render_template('results.html',
-                             select = select)
+    if session.get('access_token'):
+        auth_header = spotify.get_auth_header(session.get('access_token'))
+
+        top_tracks = mood.get_top_tracks(auth_header, user_artists)
+
+        cluster = mood.cluster_ids(top_tracks)
+        playlist_tracks = mood.select_tracks(auth_header, cluster, float(user_mood))
+        
+        app.logger.info(playlist_tracks)
+
+        play = mood.create_playlist(auth_header, user, playlist_tracks, user_mood)
+        
+        app.logger.info(play)
+
+    return render_template('playlist.html', play = play)
 

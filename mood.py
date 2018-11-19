@@ -1,15 +1,17 @@
 import json
 import requests
 from random import shuffle
+from spotify import *
 from settings import *
 from pprint import pprint
+import csv
 
 def get_top_artists(auth_header, num_entities):
     """ Return list of user's top and followed artists """
 
     artists = []
 
-    term = ['long_term']
+    term = ['long_term', 'short_term', 'medium_term']
 
     for length in term:
         request = f'{SPOTIFY_API_URL}/me/top/artists?time_range={length}&limit={num_entities}'
@@ -47,7 +49,7 @@ def get_related_artists(auth_header, top_artists):
 
     artists = set(top_artists + new_artists)
 
-    return artists
+    return list(artists)
 
 def get_top_tracks(auth_header, artists):
     """ Get top tracks of artists """
@@ -89,44 +91,53 @@ def select_tracks(auth_header, clustered_tracks, mood):
         audio_features = audio_features_data['audio_features']
 
     # Below is not selecting the correct tracks
-    #     for track in audio_features:
-    #         if mood <= 0.10:
-    #             if (track['danceability'] <= 0.10) and (track['energy'] <= 0.20) and (track['valence'] <= 0.10):
-    #                 selected_tracks.append(track['uri'])
-    #         elif mood <= 0.25:
-    #             if (0.10 < track['danceability'] <= 0.25) and (0.20 < track['energy'] <= 0.30) and (0.10 < track['valence'] <= 0.20):
-    #                 selected_tracks.append(track['uri'])
-    #         elif mood <= 0.50:
-    #             if (0.25 < track['danceability'] <= 0.05) and (0.30 < track['energy'] <= 0.40) and (0.20 < track['valence'] <= 0.40):
-    #                 selected_tracks.append(track['uri'])
-    #         elif mood <= 0.75:
-    #             if (0.50 < track['danceability'] <= 0.75) and (0.40 < track['energy'] <= 0.50) and (0.50 < track['valence']):
-    #                 selected_tracks.append(track['uri'])
-    #         elif mood <= 0.90:
-    #             if (0.75 < track['danceability'] <= 0.9) and (0.50 < track['energy'] <= 0.70) and (0.50 < track['valence']):
-    #                 selected_tracks.append(track['uri'])
-    #         elif mood <= 1.00:
-    #             if (track['danceability'] > 0.9) and (track['energy'] > 0.7) and (0.50 < track['valence']):
-    #                 selected_tracks.append(track['uri'])
+    # TO-DO: normalize data
+    
+        # for track in audio_features:
+            # if mood <= 0.10:
+            #     if (track['danceability'] <= (mood + 0.10)) and (track['energy'] <= 0.20) and (track['valence'] < 0.40):
+            #         selected_tracks.append(track['uri'])
+            # elif mood <= 0.25:
+            #     if (0.10 < track['danceability'] <= (mood + 0.15)) and (0.20 < track['energy'] <= 0.30) and (0.40 > track['valence']):
+            #         selected_tracks.append(track['uri'])
+            # elif mood <= 0.50:
+            #     if (0.25 < track['danceability'] <= (mood + 0.25)) and (0.30 < track['energy'] <= 0.40) and (0.40 >track['valence']):
+            #         selected_tracks.append(track['uri'])
+            # elif mood <= 0.75:
+            #     if (0.50 < track['danceability'] <= (mood + 0.25)) and (0.40 < track['energy'] <= 0.50) and (0.40 < track['valence']):
+            #         selected_tracks.append(track['uri'])
+            # elif mood <= 0.90:
+            #     if (0.75 < track['danceability'] <= (mood + 0.15)) and (0.50 < track['energy'] <= 0.70) and (0.40 < track['valence']):
+            #         selected_tracks.append(track['uri'])
+            # elif mood <= 1.00:
+            #     if (track['danceability'] < (mood + 0.10)) and (track['energy'] > 0.7) and (0.40 < track['valence']):
+            #         selected_tracks.append(track['uri'])
 
-    # return selected_tracks
+    shuffle(selected_tracks)
+    playlist_tracks = selected_tracks[:40]
 
-def create_playlist(auth_header, user_id, selected_tracks, mood):
+    return playlist_tracks
+
+def create_playlist(auth_header, user_id, playlist_tracks, mood):
     """ Creates playlist based on mood with selected tracks """
 
-    data = { 
-        'name' : f'Mood #{mood}',
+    mood_num = f'Mood {mood}'
+
+    payload = { 
+        'name' : mood_num,
         'description': 'Mood generated playlist'
         }
 
     playlist_request = f'{SPOTIFY_API_URL}/users/{user_id}/playlists'
-    playlist_data = requests.get(playlist_request, data = data, headers =auth_header)
+    playlist_data = requests.post(playlist_request, data = json.dumps(payload), headers =auth_header).json()
     playlist_id = playlist_data['id']
 
-    track_uris = '%2C'.join(selected_tracks)
-    add_tracks = f'{SPOTIFY_API_URL}playlists/{playlist_id}/tracks?uris={track_uris}'
+    track_uris = '%2C'.join(playlist_tracks)
+    add_tracks = f'{SPOTIFY_API_URL}/playlists/{playlist_id}/tracks?uris={track_uris}'
+    tracks_added = requests.post(add_tracks, headers=auth_header).json()
+    print(tracks_added)
 
-    return playlist_data['href']
+    return playlist_data['external_urls']['spotify']
 
 
 

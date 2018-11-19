@@ -5,7 +5,7 @@ CLIENT_ID=os.environ['SPOTIFY_CLIENT_ID']
 CLIENT_SECRET=os.environ['SPOTIFY_CLIENT_SECRET']
 REDIRECT_URI=os.environ['SPOTIFY_REDIRECT_URI']
 
-SCOPE='user-top-read user-library-read user-follow-read playlist-modify-public'
+SCOPE='user-top-read user-follow-read playlist-modify-public streaming user-read-birthdate user-read-email user-read-private'
 
 # Spotify URL
 SPOTIFY_AUTH_URL='https://accounts.spotify.com/authorize'
@@ -15,7 +15,7 @@ API_VERSION='v1'
 SPOTIFY_API_URL='{}/{}'.format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
-CLIENT_SIDE_URL='http://127.0.0.1'
+CLIENT_SIDE_URL='http://localhost/'
 PORT=5000
 
 auth_query_parameters = {
