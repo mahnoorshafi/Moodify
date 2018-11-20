@@ -21,7 +21,7 @@ def homepage():
 
     if session.get('access_token'):
         return render_template('mood.html')
-        
+
     else:
         return render_template('homepage.html')
 
@@ -32,18 +32,21 @@ def authorization():
     auth_url = spotify.get_user_authorization()
     return redirect(auth_url)
 
-@app.route('/callback')
+@app.route('/mood')
 def get_user_mood():
     """ Get user's current mood"""
 
-    # get authorization token from spotify
+    # getting authorization token from spotify
     response_data = spotify.get_tokens()
-    auth_header = spotify.get_auth_header(response_data['access_token'])
+
+    session['access_token'] = response_data['access_token']
+    auth_header = spotify.get_auth_header(session.get('access_token'))
 
     user_id = spotify.get_user_id(auth_header)
 
+    # adding user and their access token to session
     session['user'] = user_id 
-    session['access_token'] = response_data['access_token']
+    # session['access_token'] = response_data['access_token']
 
     app.logger.info(session)
 
@@ -54,6 +57,7 @@ def get_user_mood():
         db.session.add(new_user)
         db.session.commit()
 
+    # gathering users top artists 
     top_artists = mood.get_top_artists(auth_header, 50)
     artists = mood.get_related_artists(auth_header, top_artists)
 

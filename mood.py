@@ -15,14 +15,16 @@ def get_top_artists(auth_header, num_entities):
 
     for length in term:
         request = f'{SPOTIFY_API_URL}/me/top/artists?time_range={length}&limit={num_entities}'
-        top_artists_data = requests.get(request, headers=auth_header).json()
+        # top_artists_data = requests.get(request, headers=auth_header).json()
+        top_artists_data = get_spotify_data(request, auth_header)
         top_artists = top_artists_data['items']
         for top_artist in top_artists:
             if top_artist['id'] not in artists:
                 artists.append(top_artist['id'])
 
     users_followed_artists = f'{SPOTIFY_API_URL}/me/following?type=artist&limit={num_entities}'
-    followed_artists_data = requests.get(users_followed_artists, headers=auth_header).json()
+    # followed_artists_data = requests.get(users_followed_artists, headers=auth_header).json()
+    followed_artists_data = get_spotify_data(users_followed_artists, auth_header)
 
     followed_artists = followed_artists_data['artists']['items']
 
@@ -40,7 +42,8 @@ def get_related_artists(auth_header, top_artists):
 
     for artist_id in top_artists[:1]:
         request = f'{SPOTIFY_API_URL}/artists/{artist_id}/related-artists'
-        related_artists_data = requests.get(request, headers=auth_header).json()
+        # related_artists_data = requests.get(request, headers=auth_header).json()
+        related_artists_data = get_spotify_data(request, auth_header)
         related_artists = related_artists_data['artists']
 
         for related_artist in related_artists:
@@ -58,7 +61,8 @@ def get_top_tracks(auth_header, artists):
 
     for artist_id in artists:
         request = f'{SPOTIFY_API_URL}/artists/{artist_id}/top-tracks?country=US'
-        track_data = requests.get(request, headers=auth_header).json()
+        # track_data = requests.get(request, headers=auth_header).json()
+        track_data = get_spotify_data(request, auth_header)
         tracks = track_data['tracks']
 
         for track in tracks:
@@ -87,12 +91,13 @@ def select_tracks(auth_header, clustered_tracks, mood):
     for track_ids in clustered_tracks:
         ids = '%2C'.join(track_ids)
         request = f'{SPOTIFY_API_URL}/audio-features?ids={ids}'
-        audio_features_data = requests.get(request, headers=auth_header).json()
+        # audio_features_data = requests.get(request, headers=auth_header).json()
+        audio_features_data = get_spotify_data(request, auth_header)
         audio_features = audio_features_data['audio_features']
 
     # Below is not selecting the correct tracks
     # TO-DO: normalize data
-    
+
         # for track in audio_features:
             # if mood <= 0.10:
             #     if (track['danceability'] <= (mood + 0.10)) and (track['energy'] <= 0.20) and (track['valence'] < 0.40):
@@ -134,7 +139,8 @@ def create_playlist(auth_header, user_id, playlist_tracks, mood):
 
     track_uris = '%2C'.join(playlist_tracks)
     add_tracks = f'{SPOTIFY_API_URL}/playlists/{playlist_id}/tracks?uris={track_uris}'
-    tracks_added = requests.post(add_tracks, headers=auth_header).json()
+    # tracks_added = requests.post(add_tracks, headers=auth_header).json()
+    tracks_added = post_spotify_data(add_tracks, auth_header)
     print(tracks_added)
 
     return playlist_data['external_urls']['spotify']

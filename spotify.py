@@ -55,6 +55,17 @@ def get_auth_header(access_token):
     auth_header = {'Authorization': 'Bearer {}'.format(access_token)}
     return auth_header
 
+
+def get_user_id(auth_header):
+    """ Return users spotify id to add to database """ 
+
+    request = f'{SPOTIFY_API_URL}/me'
+    user_info_data = requests.get(request, headers=auth_header).json()
+    user_id = user_info_data['id']
+
+    return user_id
+
+
 def get_spotify_data(request, auth_header):
     """ Return data from Spotify get request """
 
@@ -84,6 +95,9 @@ def get_spotify_data(request, auth_header):
         session['access_token'] = response_data['access_token']
 
         get_spotify_data(request, auth_header)
+
+    else:
+        get_user_authorization()
 
     return data
 
@@ -118,16 +132,10 @@ def post_spotify_data(request, auth_header):
 
         get_spotify_data(request, auth_header)
 
+    else:
+        get_user_authorization()
+
     return data
-
-def get_user_id(auth_header):
-    """ Return users spotify id to add to database """ 
-
-    request = f'{SPOTIFY_API_URL}/me'
-    user_info_data = requests.get(request, headers=auth_header).json()
-    user_id = user_info_data['id']
-
-    return user_id
 
 
 
