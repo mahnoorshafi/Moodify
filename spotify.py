@@ -90,14 +90,11 @@ def get_spotify_data(request, auth_header):
         refresh_token_url = requests.post(SPOTIFY_TOKEN_URL, data=code_payload, headers=headers)
         response_data = post_request.json()
 
-        auth_header = {'Authorization': 'Bearer {}'.format(resonse_data['access_token'])}
+        auth_header = {'Authorization': 'Bearer {}'.format(response_data['access_token'])}
         
         session['access_token'] = response_data['access_token']
 
         get_spotify_data(request, auth_header)
-
-    else:
-        get_user_authorization()
 
     return data
 
@@ -126,14 +123,11 @@ def post_spotify_data(request, auth_header):
         refresh_token_url = requests.post(SPOTIFY_TOKEN_URL, data=code_payload, headers=headers)
         response_data = post_request.json()
 
-        auth_header = {'Authorization': 'Bearer {}'.format(resonse_data['access_token'])}
+        auth_header = {'Authorization': 'Bearer {}'.format(response_data['access_token'])}
         
         session['access_token'] = response_data['access_token']
 
         get_spotify_data(request, auth_header)
-
-    else:
-        get_user_authorization()
 
     return data
 

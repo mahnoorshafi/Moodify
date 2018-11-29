@@ -5,8 +5,9 @@
 {% block content %}
 
     <form action = '/playlist'>
-    What is your mood? <i>0-1.0</i> <input type="text" name="mood">
-    <input type="submit">
+        What is your mood? <i>0-1.0</i> 
+        <input type='number' id='mood' name='mood' step='0.001' min='0' max='1'>
+        <input type="submit">
     </form>
 
 {% endblock %}

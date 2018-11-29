@@ -10,7 +10,7 @@ class User(db.Model):
 
     __tablename__ = 'users'
 
-    id = db.Column(db.String, primary_key=True, nullable=False)
+    id = db.Column(db.String, primary_key=True)
     refresh_token = db.Column(db.String, nullable=False)
 
     def __repr__(self):
@@ -23,16 +23,29 @@ class Track(db.Model):
 
     __tablename__ = 'tracks'
 
-    id = db.Column(db.String, primary_key=True, nullable=False)
-    name = db.Column(db.String, nullable=False)
+    id = db.Column(db.String, primary_key=True)
+    uri = db.Column(db.String, nullable=False)
     danceability = db.Column(db.Numeric(4,3), nullable=False)
     energy = db.Column(db.Numeric(4,3), nullable=False)
     valence = db.Column(db.Numeric(4,3), nullable=False)
 
+    users = db.relationship('User', secondary = 'user_track', backref = 'tracks')
+
+
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<Track id={self.id} title={self.name}>"
+        return f"<Track id={self.id}>"
+
+
+class UserTrack(db.Model):
+    """ Tracks for a user """
+
+    __tablename__ = 'user_track'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
+    track_id = db.Column(db.String, db.ForeignKey('tracks.id'), nullable=False)
 
 
 class Playlist(db.Model):
@@ -40,7 +53,7 @@ class Playlist(db.Model):
 
     __tablename__ = 'playlists'
 
-    id = db.Column(db.String, primary_key=True, nullable = False)
+    id = db.Column(db.String, primary_key=True)
     user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
     mood = db.Column(db.Numeric(4,3), nullable=False)
 
@@ -63,6 +76,7 @@ def connect_to_db(app):
 
     # Configure to use PostgreSQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///hb_project'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
 
