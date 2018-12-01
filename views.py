@@ -1,6 +1,7 @@
 import requests
 import spotify
 import mood
+import json
 from settings import *
 from model import User, Track, Playlist, UserTrack, playlistTrack, db, connect_to_db
 
@@ -60,26 +61,27 @@ def get_user_mood():
 def playlist():
     """ Take user to spotify web player with created playlist """
 
-    auth_header = spotify.get_auth_header(session.get('access_token'))
+    token = session.get('access_token')
+    username = session.get('user')
+
+    auth_header = spotify.get_auth_header(token)
 
     user_mood = request.args.get('mood')
-
-    username = session.get('user')
 
     user = db.session.query(User).filter(User.id == username).one()
     user_tracks = user.tracks
 
     if user_tracks:
         old_user_audio_feat = mood.standardize_audio_features(user_tracks)
-        old_user_playlist_tracks = mood.select_tracks(old_user_audio_feat, float(user_mood))
-        play = mood.create_playlist(auth_header, username, old_user_playlist_tracks, user_mood)
+        playlist_tracks = mood.select_tracks(old_user_audio_feat, float(user_mood))
+        play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
+        print(play)
     else:
         user_artists = session.get('artists')
         new_user_top_tracks = mood.get_top_tracks(auth_header, user_artists)
         cluster = mood.cluster_ids(top_tracks)
         new_user_tracks = mood.add_and_get_user_tracks(auth_header, cluster, float(user_mood))
-        new_user_playlist_tracks = mood.standardize_audio_features(new_user_tracks, float(user_mood))
-        play = mood.create_playlist(auth_header, username, new_user_playlist_tracks, user_mood)
-
-    return render_template('playlist.html', play = play)
+        playlist_tracks = mood.standardize_audio_features(new_user_tracks, float(user_mood))
+        play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
+    return render_template('playlist.html', playlist_tracks = list(playlist_tracks))
 

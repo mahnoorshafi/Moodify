@@ -4,9 +4,25 @@
 
 {% block content %}
 
-<h1>Your playlist has been created</h1>
+<div id='root'></div>
 
-  <button 
-        class="btn" id="login" onclick="location.href = {{ play }}">Play Playlist
-    </button>
+<script src="static/App.js" type="text/babel"></script>
+<script src="static/Player.js" type="text/babel"></script>
+<script src="static/Playlist.js" type="text/babel"></script>
+<script src="static/Song.js" type="text/babel"></script>
+
+<script type="text/babel">
+
+const tracks = JSON.parse('{{ playlist_tracks|tojson }}');
+
+ReactDOM.render(
+    <App tracks={tracks} />,
+    document.getElementById('root')
+);
+
+
+</script>
+
+
+
 {% endblock %}

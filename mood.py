@@ -13,7 +13,7 @@ def get_top_artists(auth_header, num_entities):
 
     artists = []
 
-    term = ['long_term', 'medium_term' 'short_term']
+    term = ['long_term', 'medium_term', 'short_term']
 
     for length in term:
         request = f'{SPOTIFY_API_URL}/me/top/artists?time_range={length}&limit={num_entities}'
@@ -172,10 +172,10 @@ def select_tracks(user_audio_features, mood):
             if ((mood - 0.1) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.4)) and (feature['danceability'] <= (mood + 0.5)):
                 selected_tracks.append(track)
         if mood <= 0.50:
-            if ((mood - 0.1) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.2)) and (feature['danceability'] <= (mood + 0.1)):
+            if ((mood - 0.1) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.1)) and (feature['danceability'] <= mood):
                 selected_tracks.append(track)
         if mood <= 0.75:
-            if ((mood - 0.1) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.2)) and (feature['danceability'] >= (mood - 0.1)):
+            if ((mood - 0.1) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.1)) and (feature['danceability'] >= mood):
                 selected_tracks.append(track)
         if mood <= 0.90:
             if ((mood - 0.1) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.4)) and (feature['danceability'] >= (mood - 0.5)):
@@ -186,7 +186,7 @@ def select_tracks(user_audio_features, mood):
 
     shuffle(selected_tracks)
     playlist_tracks = selected_tracks[:36]
-
+    
     return set(playlist_tracks)
 
 def create_playlist(auth_header, user_id, playlist_tracks, mood):
