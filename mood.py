@@ -166,22 +166,22 @@ def select_tracks(user_audio_features, mood):
 
     for track, feature in user_audio_features.items():
         if mood <= 0.10:
-            if (0 <= feature['valence'] <= (mood + 0.15)) and (feature['energy'] <= (mood + 0.3)) and (feature['danceability'] <= (mood + 0.4)):
+            if (0 <= feature['valence'] <= (mood + 0.10)) and (feature['energy'] <= (mood + 0.3)) and (feature['danceability'] <= (mood + 0.4)):
                 selected_tracks.append(track)
         if mood <= 0.25:
-            if ((mood - 0.1) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.4)) and (feature['danceability'] <= (mood + 0.5)):
+            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.4)) and (feature['danceability'] <= (mood + 0.5)):
                 selected_tracks.append(track)
         if mood <= 0.50:
-            if ((mood - 0.1) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.1)) and (feature['danceability'] <= mood):
+            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.1)) and (feature['danceability'] <= mood):
                 selected_tracks.append(track)
         if mood <= 0.75:
-            if ((mood - 0.1) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.1)) and (feature['danceability'] >= mood):
+            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.1)) and (feature['danceability'] >= mood):
                 selected_tracks.append(track)
         if mood <= 0.90:
-            if ((mood - 0.1) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.4)) and (feature['danceability'] >= (mood - 0.5)):
+            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.4)) and (feature['danceability'] >= (mood - 0.5)):
                 selected_tracks.append(track)
         if mood <= 1.00:
-            if ((mood - 0.15) <= feature['valence'] <= 1) and (feature['energy'] >= (mood - 0.3)) and (feature['danceability'] >= (mood - 0.4)):
+            if ((mood - 0.10) <= feature['valence'] <= 1) and (feature['energy'] >= (mood - 0.3)) and (feature['danceability'] >= (mood - 0.4)):
                 selected_tracks.append(track)
 
     shuffle(selected_tracks)

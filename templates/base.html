@@ -13,6 +13,10 @@
 
     <body>
 
+        {% for message in get_flashed_messages() %}
+         {{ message }}
+        {% endfor %}
+
         {% block content %}BODY CONTENT GOES HERE{% endblock %}
 
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>

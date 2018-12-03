@@ -72,16 +72,32 @@ def playlist():
     user_tracks = user.tracks
 
     if user_tracks:
-        old_user_audio_feat = mood.standardize_audio_features(user_tracks)
-        playlist_tracks = mood.select_tracks(old_user_audio_feat, float(user_mood))
+        audio_feat = mood.standardize_audio_features(user_tracks)
+        playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
         play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
         print(play)
     else:
         user_artists = session.get('artists')
-        new_user_top_tracks = mood.get_top_tracks(auth_header, user_artists)
+        top_tracks = mood.get_top_tracks(auth_header, user_artists)
         cluster = mood.cluster_ids(top_tracks)
-        new_user_tracks = mood.add_and_get_user_tracks(auth_header, cluster, float(user_mood))
-        playlist_tracks = mood.standardize_audio_features(new_user_tracks, float(user_mood))
+        tracks = mood.add_and_get_user_tracks(auth_header, cluster, float(user_mood))
+        audio_feat = mood.standardize_audio_features(tracks, float(user_mood))
+        playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
         play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
-    return render_template('playlist.html', playlist_tracks = list(playlist_tracks))
+    return render_template('playlist.html', playlist_tracks = list(playlist_tracks), token = token)
+
+@app.route('/logout')
+def logout():
+    """ Logged out and session cleared """
+
+    session.clear()
+    flash("Logged out!")
+    return redirect('/')
+
+
+
+
+
+
+
 

@@ -4,25 +4,29 @@
 
 {% block content %}
 
+<p><b><a href="/logout">Log Out</a></p>
 <div id='root'></div>
 
 <script src="static/App.js" type="text/babel"></script>
 <script src="static/Player.js" type="text/babel"></script>
 <script src="static/Playlist.js" type="text/babel"></script>
 <script src="static/Song.js" type="text/babel"></script>
+<script src="https://sdk.scdn.co/spotify-player.js"></script>
 
 <script type="text/babel">
 
 const tracks = JSON.parse('{{ playlist_tracks|tojson }}');
+const accessToken = JSON.parse('{{ token|tojson }}');
 
 ReactDOM.render(
-    <App tracks={tracks} />,
+    <App 
+    tracks={tracks}
+    token = {accessToken}
+    />,
     document.getElementById('root')
 );
 
 
 </script>
-
-
 
 {% endblock %}
