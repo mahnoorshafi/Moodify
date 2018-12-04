@@ -52,7 +52,7 @@ def get_user_mood():
     # gathering users top artists
     top_artists = mood.get_top_artists(auth_header, 50)
     artists = mood.get_related_artists(auth_header, top_artists)
-
+    
     session['artists'] = artists
 
     return render_template('mood.html')
@@ -71,18 +71,15 @@ def playlist():
     user = db.session.query(User).filter(User.id == username).one()
     user_tracks = user.tracks
 
-    if user_tracks:
-        audio_feat = mood.standardize_audio_features(user_tracks)
-        playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
-        play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
-    else:   
+    if not user_tracks:
         user_artists = session.get('artists')
         top_tracks = mood.get_top_tracks(auth_header, user_artists)
         cluster = mood.cluster_ids(top_tracks)
-        all_tracks = mood.add_and_get_user_tracks(auth_header, cluster)
-        audio_feat = mood.standardize_audio_features(all_tracks)
-        playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
-        play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
+        mood.add_and_get_user_tracks(auth_header, cluster)
+    
+    audio_feat = mood.standardize_audio_features(user_tracks)
+    playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
+    play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
 
     return render_template('playlist.html', playlist_tracks = list(playlist_tracks), token = token)
 
