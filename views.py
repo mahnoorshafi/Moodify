@@ -1,11 +1,10 @@
 import requests
 import spotify
 import mood
-import json
 from settings import *
-from model import User, Track, Playlist, UserTrack, playlistTrack, db, connect_to_db
+from model import User, Track, Playlist, UserTrack, PlaylistTrack, db, connect_to_db
 
-from flask import Flask, request, redirect, render_template, flash, session
+from flask import Flask, request, redirect, render_template, flash, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 
@@ -81,10 +80,34 @@ def playlist():
     playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
     play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
 
-    track_info = mood.track_info(playlist_tracks)
-
     return render_template('playlist.html', playlist_tracks = list(playlist_tracks), token = token)
- 
+
+@app.route('/track-info.json')
+def track_info():
+    """ Return dictionary containing track name as key and track uri as value """
+
+    track_info = []
+
+    user_playlist = session.get('playlist')
+
+    playlist_tracks = db.session.query(PlaylistTrack).filter(PlaylistTrack.playlist_id == user_playlist).all()
+    print(playlist_tracks)
+
+    for track in playlist_tracks:
+        track_uri = track.track_uri
+
+        track = db.session.query(Track).filter(Track.uri == track_uri).one()
+
+        track_name = track.name
+
+        track_data = {'track_name' : track_name,
+                      'track_uri' : track_uri}
+
+        track_info.append(track_data)
+
+    print(track_info)
+    return jsonify({'tracks' : track_info})
+
 @app.route('/logout')
 def logout():
     """ Logged out and session cleared """
