@@ -24,10 +24,11 @@ class Track(db.Model):
     __tablename__ = 'tracks'
 
     id = db.Column(db.String, primary_key=True)
-    uri = db.Column(db.String, nullable=False)
-    danceability = db.Column(db.Numeric(4,3), nullable=False)
-    energy = db.Column(db.Numeric(4,3), nullable=False)
-    valence = db.Column(db.Numeric(4,3), nullable=False)
+    uri = db.Column(db.String)
+    name = db.Column(db.String)
+    danceability = db.Column(db.Numeric(4,3))
+    energy = db.Column(db.Numeric(4,3))
+    valence = db.Column(db.Numeric(4,3))
 
     users = db.relationship('User', secondary = 'user_track', backref = 'tracks')
 
@@ -58,7 +59,7 @@ class Playlist(db.Model):
     mood = db.Column(db.Numeric(4,3), nullable=False)
 
     user = db.relationship('User', backref = 'playlists')
-    tracks = db.relationship('Track', secondary='playlist_track')
+    tracks = db.relationship('Track', secondary='playlist_track', cascade = 'all, delete')
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -75,7 +76,7 @@ def connect_to_db(app):
     """Connect the database to app."""
 
     # Configure to use PostgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///hb_project'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///moodify'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)

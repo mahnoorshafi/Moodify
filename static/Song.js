@@ -9,6 +9,7 @@ class Song extends React.Component {
             <button
                 value={this.props.track} 
                 onClick={this.selectSong}> {this.props.track}
-            </button>)
+            </button>
+        );
     }
 }

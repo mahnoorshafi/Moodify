@@ -6,6 +6,7 @@ from settings import *
 from model import User, Track, Playlist, UserTrack, playlistTrack, db, connect_to_db
 from scipy import stats 
 import numpy as np
+from flask_sqlalchemy import SQLAlchemy 
 
 
 def get_top_artists(auth_header, num_entities):
@@ -69,22 +70,41 @@ def get_top_tracks(auth_header, artists):
         tracks = track_data['tracks']
 
         for track in tracks:
+            track_id = track['id']
+            track_uri = track['uri']
+            track_name = track['name']
+
+            track_exist = db.session.query(Track).filter(Track.id == track_id).all()
+
+            if not track_exist:
+                new_track = Track(id=track_id, uri=track_uri, name=track_name)
+                db.session.add(new_track)
+
+            user = session.get('user')
+            new_user_track_exist = db.session.query(UserTrack).filter(UserTrack.user_id == user, UserTrack.track_id == track_id).all()
+
+            if not new_user_track_exist:
+                new_user_track = UserTrack(user_id = user, track_id = track_id)
+                db.session.add(new_user_track)
+
             if track['id'] not in top_tracks:
                 top_tracks.append(track['id'])
+            
+        db.session.commit()
 
     return top_tracks
 
-def cluster_ids(tracks, n = 100):
+def cluster_ids(top_tracks, n = 100):
     """ Return list of track ids clustered in groups of 100 """
 
     clustered_tracks = []
-    for i in range(0, len(tracks), n):
-        clustered_tracks.append(tracks[i:i + n])
+    for i in range(0, len(top_tracks), n):
+        clustered_tracks.append(top_tracks[i:i + n])
 
     return clustered_tracks
 
 
-def add_and_get_user_tracks(auth_header, clustered_tracks, mood):
+def add_and_get_user_tracks(auth_header, clustered_tracks):
     """ Add audio features of user's top tracks to database and return list of users track objects """
 
     track_audio_features = []
@@ -99,29 +119,25 @@ def add_and_get_user_tracks(auth_header, clustered_tracks, mood):
 
     for tracks in track_audio_features:
         for track in tracks:
-            track_id = track['id']
-            track_uri = track['uri']
-            track_valence = track['valence']
-            track_danceability = track['danceability']
-            track_energy = track['energy']
+            if track:
+                track_id = track['id']
+                track_valence = track['valence']
+                track_danceability = track['danceability']
+                track_energy = track['energy']
 
-            track_exist = db.session.query(Track).filter(Track.id == track_id).all()
+                track_exist = db.session.query(Track).filter(Track.id == track_id).one()
 
-            if not track_exist:
-                new_track = Track(id=track_id, 
-                                uri=track_uri,
-                                danceability=track_danceability, 
-                                energy=track_energy, 
-                                valence=track_valence)
-                db.session.add(new_track)
+                if track_exist:
+                    track_exist.valence = track_valence
+                    track_exist.danceability = track_danceability
+                    track_exist.energy = track_energy
 
-            user = session.get('user')
-            new_user_track_exist = db.session.query(UserTrack).filter(UserTrack.user_id == user, UserTrack.track_id == track_id).all()
-
-            if not new_user_track_exist:
-                new_user_track = UserTrack(user_id = user, track_id = track_id)
-                db.session.add(new_user_track)
         db.session.commit()
+
+    no_audio_feats = db.session.query(Track).filter(Track.valence == None, Track.danceability == None, Track.energy == None).all()
+    for track in no_audio_feats:
+        db.session.delete(track)
+    db.session.commit()
 
     user_id = session.get('user')
     user = db.session.query(User).filter(User.id == user_id).one()
@@ -166,10 +182,10 @@ def select_tracks(user_audio_features, mood):
 
     for track, feature in user_audio_features.items():
         if mood <= 0.10:
-            if (0 <= feature['valence'] <= (mood + 0.10)) and (feature['energy'] <= (mood + 0.3)) and (feature['danceability'] <= (mood + 0.4)):
+            if (0 <= feature['valence'] <= (mood + 0.10)) and (feature['energy'] <= (mood + 0.2)) and (feature['danceability'] <= (mood + 0.3)):
                 selected_tracks.append(track)
         if mood <= 0.25:
-            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.4)) and (feature['danceability'] <= (mood + 0.5)):
+            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.2)) and (feature['danceability'] <= (mood + 0.3)):
                 selected_tracks.append(track)
         if mood <= 0.50:
             if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.1)) and (feature['danceability'] <= mood):
@@ -178,10 +194,10 @@ def select_tracks(user_audio_features, mood):
             if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.1)) and (feature['danceability'] >= mood):
                 selected_tracks.append(track)
         if mood <= 0.90:
-            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.4)) and (feature['danceability'] >= (mood - 0.5)):
+            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.2)) and (feature['danceability'] >= (mood - 0.3)):
                 selected_tracks.append(track)
         if mood <= 1.00:
-            if ((mood - 0.10) <= feature['valence'] <= 1) and (feature['energy'] >= (mood - 0.3)) and (feature['danceability'] >= (mood - 0.4)):
+            if ((mood - 0.10) <= feature['valence'] <= 1) and (feature['energy'] >= (mood - 0.2)) and (feature['danceability'] >= (mood - 0.3)):
                 selected_tracks.append(track)
 
     shuffle(selected_tracks)
@@ -209,13 +225,6 @@ def create_playlist(auth_header, user_id, playlist_tracks, mood):
     # tracks_added = post_spotify_data(add_tracks, auth_header)
 
     return playlist_data['external_urls']['spotify']
-
-
-
-
-
-
-
 
     
     

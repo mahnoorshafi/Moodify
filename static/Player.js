@@ -83,7 +83,6 @@ class Player extends React.Component {
         }
     }
 
-
     render() {
 
         let trackName = "Track";
@@ -94,8 +93,7 @@ class Player extends React.Component {
         let artistName = "Artist";
             if (this.state.currentTrack) {
                 // artistName = this.state.currentTrack.track_window.current_track.artists[0].name
-                artists = this.state.currentTrack.track_window.current_track.artists
-                artistName = artists.na
+                artistName = this.state.currentTrack.track_window.current_track.artists.map(artist => artist.name).join(", ")
             }
 
         let albumArt = '';

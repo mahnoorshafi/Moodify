@@ -75,15 +75,15 @@ def playlist():
         audio_feat = mood.standardize_audio_features(user_tracks)
         playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
         play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
-        print(play)
-    else:
+    else:   
         user_artists = session.get('artists')
         top_tracks = mood.get_top_tracks(auth_header, user_artists)
         cluster = mood.cluster_ids(top_tracks)
-        tracks = mood.add_and_get_user_tracks(auth_header, cluster, float(user_mood))
-        audio_feat = mood.standardize_audio_features(tracks, float(user_mood))
+        all_tracks = mood.add_and_get_user_tracks(auth_header, cluster)
+        audio_feat = mood.standardize_audio_features(all_tracks)
         playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
         play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
+
     return render_template('playlist.html', playlist_tracks = list(playlist_tracks), token = token)
 
 @app.route('/logout')
