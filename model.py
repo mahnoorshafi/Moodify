@@ -23,8 +23,8 @@ class Track(db.Model):
 
     __tablename__ = 'tracks'
 
-    id = db.Column(db.String, primary_key=True)
-    uri = db.Column(db.String)
+    uri = db.Column(db.String, primary_key=True)
+    id = db.Column(db.String)
     name = db.Column(db.String)
     danceability = db.Column(db.Numeric(4,3))
     energy = db.Column(db.Numeric(4,3))
@@ -46,7 +46,7 @@ class UserTrack(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
-    track_id = db.Column(db.String, db.ForeignKey('tracks.id'), nullable=False)
+    track_uri = db.Column(db.String, db.ForeignKey('tracks.uri'), nullable=False)
 
 
 class Playlist(db.Model):
@@ -67,10 +67,15 @@ class Playlist(db.Model):
         return f"<Playlist id={self.id} user={self.user_id} mood={self.mood}>"
 
 
-playlistTrack = db.Table('playlist_track',
-        db.Column('playlist_id', db.String, db.ForeignKey('playlists.id'), nullable=False),
-        db.Column('track_id', db.String, db.ForeignKey('tracks.id'), nullable=False)
-    )
+class PlaylistTrack(db.Model):
+    """ Tracks in playlist """
+
+    __tablename__ = 'playlist_track'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    playlist_id = db.Column(db.String, db.ForeignKey('playlists.id'), nullable=False)
+    track_uri = db.Column(db.String, db.ForeignKey('tracks.uri'), nullable=False)
+
 
 def connect_to_db(app):
     """Connect the database to app."""
