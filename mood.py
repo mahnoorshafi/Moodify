@@ -3,7 +3,7 @@ import requests
 from random import shuffle
 from spotify import *
 from settings import *
-from model import User, Track, Playlist, UserTrack, playlistTrack, db, connect_to_db
+from model import User, Track, Playlist, UserTrack, PlaylistTrack, db, connect_to_db
 from scipy import stats 
 import numpy as np
 from flask_sqlalchemy import SQLAlchemy 
@@ -70,21 +70,21 @@ def get_top_tracks(auth_header, artists):
         tracks = track_data['tracks']
 
         for track in tracks:
-            track_id = track['id']
             track_uri = track['uri']
+            track_id = track['id']
             track_name = track['name']
 
-            track_exist = db.session.query(Track).filter(Track.id == track_id).all()
+            track_exist = db.session.query(Track).filter(Track.uri == track_uri).all()
 
             if not track_exist:
-                new_track = Track(id=track_id, uri=track_uri, name=track_name)
+                new_track = Track(uri=track_uri, id=track_id, name=track_name)
                 db.session.add(new_track)
 
             user = session.get('user')
-            new_user_track_exist = db.session.query(UserTrack).filter(UserTrack.user_id == user, UserTrack.track_id == track_id).all()
+            new_user_track_exist = db.session.query(UserTrack).filter(UserTrack.user_id == user, UserTrack.track_uri == track_uri).all()
 
             if not new_user_track_exist:
-                new_user_track = UserTrack(user_id = user, track_id = track_id)
+                new_user_track = UserTrack(user_id = user, track_uri = track_uri)
                 db.session.add(new_user_track)
 
             if track['id'] not in top_tracks:
@@ -120,12 +120,12 @@ def add_and_get_user_tracks(auth_header, clustered_tracks):
     for tracks in track_audio_features:
         for track in tracks:
             if track:
-                track_id = track['id']
+                track_uri = track['uri']
                 track_valence = track['valence']
                 track_danceability = track['danceability']
                 track_energy = track['energy']
 
-                track_exist = db.session.query(Track).filter(Track.id == track_id).one()
+                track_exist = db.session.query(Track).filter(Track.uri == track_uri).one()
 
                 if track_exist:
                     track_exist.valence = track_valence
@@ -182,7 +182,7 @@ def select_tracks(user_audio_features, mood):
 
     for track, feature in user_audio_features.items():
         if mood <= 0.10:
-            if (0 <= feature['valence'] <= (mood + 0.10)) and (feature['energy'] <= (mood + 0.1)) and (feature['danceability'] <= (mood + 0.2)):
+            if (0 <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.1)) and (feature['danceability'] <= (mood + 0.2)):
                 selected_tracks.append(track)
         if mood <= 0.25:
             if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.1)) and (feature['danceability'] <= (mood + 0.2)):
@@ -194,10 +194,10 @@ def select_tracks(user_audio_features, mood):
             if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.1)) and (feature['danceability'] >= mood):
                 selected_tracks.append(track)
         if mood <= 0.90:
-            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.1)) and (feature['danceability'] >= (mood - 0.2)):
+            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.2)) and (feature['danceability'] >= (mood - 0.3)):
                 selected_tracks.append(track)
         if mood <= 1.00:
-            if ((mood - 0.10) <= feature['valence'] <= 1) and (feature['energy'] >= (mood - 0.1)) and (feature['danceability'] >= (mood - 0.2)):
+            if ((mood - 0.1) <= feature['valence'] <= 1) and (feature['energy'] >= (mood - 0.3)) and (feature['danceability'] >= (mood - 0.4)):
                 selected_tracks.append(track)
 
     shuffle(selected_tracks)
@@ -218,6 +218,25 @@ def create_playlist(auth_header, user_id, playlist_tracks, mood):
     playlist_request = f'{SPOTIFY_API_URL}/users/{user_id}/playlists'
     playlist_data = requests.post(playlist_request, data = json.dumps(payload), headers =auth_header).json()
     playlist_id = playlist_data['id']
+    session['playlist'] = playlist_id
+
+    playlist_exist = db.session.query(Playlist).filter(Playlist.id == playlist_id).all()
+
+    if not playlist_exist:
+        new_playlist = Playlist(id = playlist_id,
+                                user_id = user_id,
+                                mood = mood)
+        db.session.add(new_playlist)
+
+
+    for track in playlist_tracks:
+        playlist_track_exist = db.session.query(PlaylistTrack).filter(PlaylistTrack.playlist_id == playlist_id, 
+                                                            PlaylistTrack.track_uri == track).all()
+        if not playlist_track_exist:
+            new_playlist_track = PlaylistTrack(playlist_id = playlist_id, track_uri = track)
+            db.session.add(new_playlist_track)
+
+    db.session.commit()
 
     track_uris = '%2C'.join(playlist_tracks)
     add_tracks = f'{SPOTIFY_API_URL}/playlists/{playlist_id}/tracks?uris={track_uris}'
@@ -226,17 +245,6 @@ def create_playlist(auth_header, user_id, playlist_tracks, mood):
 
     return playlist_data['external_urls']['spotify']
 
-def track_info(playlist_tracks):
-    """ Return dictionary containing track name as key and track uri as value """
-
-    track_info = {}
-
-    for track_uri in playlist_tracks:
-        track = db.session.query(Track).filter(Track.uri == track_uri).one()
-        track_name = track.name
-        track_info[track_name] = track_uri
-
-    return json.dumps(track_info)
 
 
 
