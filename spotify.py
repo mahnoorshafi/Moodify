@@ -5,7 +5,7 @@ import base64
 import urllib
 from settings import *
 from flask import request, flash, session
-from model import User, Track, Playlist, playlistTrack, db, connect_to_db
+from model import User, Track, Playlist, PlaylistTrack, db, connect_to_db
 
 def get_user_authorization():
     """ User Authorization """
