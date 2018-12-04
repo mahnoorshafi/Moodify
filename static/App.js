@@ -33,12 +33,13 @@ class App extends React.Component {
                 songToPlay={this.state.trackPlaying}
                 nextSong={this.nextTrack}
                 previousSong={this.previousTrack}
-                tracks={this.props.tracks} />
+                tracks={this.props.tracks}  />
 
                 <Playlist
                 updateTrack={this.updateTrack}
                 songPlaying={this.state.trackPlaying} 
-                tracks={this.props.tracks} />
+                tracks={this.props.tracks}
+                trackInfo={this.props.trackInfo} />
             </div>
         )
     }

@@ -182,10 +182,10 @@ def select_tracks(user_audio_features, mood):
 
     for track, feature in user_audio_features.items():
         if mood <= 0.10:
-            if (0 <= feature['valence'] <= (mood + 0.10)) and (feature['energy'] <= (mood + 0.2)) and (feature['danceability'] <= (mood + 0.3)):
+            if (0 <= feature['valence'] <= (mood + 0.10)) and (feature['energy'] <= (mood + 0.1)) and (feature['danceability'] <= (mood + 0.2)):
                 selected_tracks.append(track)
         if mood <= 0.25:
-            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.2)) and (feature['danceability'] <= (mood + 0.3)):
+            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.1)) and (feature['danceability'] <= (mood + 0.2)):
                 selected_tracks.append(track)
         if mood <= 0.50:
             if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] <= (mood + 0.1)) and (feature['danceability'] <= mood):
@@ -194,10 +194,10 @@ def select_tracks(user_audio_features, mood):
             if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.1)) and (feature['danceability'] >= mood):
                 selected_tracks.append(track)
         if mood <= 0.90:
-            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.2)) and (feature['danceability'] >= (mood - 0.3)):
+            if ((mood - 0.05) <= feature['valence'] <= (mood + 0.05)) and (feature['energy'] >= (mood - 0.1)) and (feature['danceability'] >= (mood - 0.2)):
                 selected_tracks.append(track)
         if mood <= 1.00:
-            if ((mood - 0.10) <= feature['valence'] <= 1) and (feature['energy'] >= (mood - 0.2)) and (feature['danceability'] >= (mood - 0.3)):
+            if ((mood - 0.10) <= feature['valence'] <= 1) and (feature['energy'] >= (mood - 0.1)) and (feature['danceability'] >= (mood - 0.2)):
                 selected_tracks.append(track)
 
     shuffle(selected_tracks)
@@ -226,8 +226,17 @@ def create_playlist(auth_header, user_id, playlist_tracks, mood):
 
     return playlist_data['external_urls']['spotify']
 
-    
-    
+def track_info(playlist_tracks):
+    """ Return dictionary containing track name as key and track uri as value """
+
+    track_info = {}
+
+    for track_uri in playlist_tracks:
+        track = db.session.query(Track).filter(Track.uri == track_uri).one()
+        track_name = track.name
+        track_info[track_name] = track_uri
+
+    return json.dumps(track_info)
 
 
 

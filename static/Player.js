@@ -18,13 +18,6 @@ class Player extends React.Component {
                 volume: 0.5
             });
 
-            this.player.on('ready', async data => {
-                let { device_id } = data;
-                console.log("Let the music play on!");
-                // set the deviceId variable, then let's try
-                // to swap music playback to *our* player
-            });
-
             this.player.addListener('player_state_changed', currentTrack => {
                 this.setState({currentTrack: currentTrack});
                 console.log(currentTrack)
@@ -38,7 +31,14 @@ class Player extends React.Component {
                 if (success) {
                 console.log('The Web Playback SDK successfully connected to Spotify!');
                 }
-            })
+            });
+
+            this.player.on('ready', async data => {
+                let { device_id } = data;
+                console.log("Let the music play on!");
+                // set the deviceId variable, then let's try
+                // to swap music playback to *our* player
+            });
         }
     }
 
@@ -102,9 +102,9 @@ class Player extends React.Component {
             }
 
         return (<div>
-            <div> {trackName} </div>
-            <div> {artistName} </div>
             <img src={albumArt}></img>
+            <p> {trackName} </p>
+            <p> {artistName} </p>
 
 
             <button onClick={this.goToPreviousSong}> Previous </button>

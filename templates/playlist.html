@@ -15,13 +15,13 @@
 
 <script type="text/babel">
 
-const tracks = JSON.parse('{{ playlist_tracks|tojson }}');
+const tracks = JSON.parse('{{ playlist_tracks|tojson }}'); 
 const accessToken = JSON.parse('{{ token|tojson }}');
 
 ReactDOM.render(
     <App 
     tracks={tracks}
-    token = {accessToken}
+    token={accessToken}
     />,
     document.getElementById('root')
 );

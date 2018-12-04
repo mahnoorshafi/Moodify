@@ -81,8 +81,10 @@ def playlist():
     playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
     play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
 
-    return render_template('playlist.html', playlist_tracks = list(playlist_tracks), token = token)
+    track_info = mood.track_info(playlist_tracks)
 
+    return render_template('playlist.html', playlist_tracks = list(playlist_tracks), token = token)
+ 
 @app.route('/logout')
 def logout():
     """ Logged out and session cleared """
