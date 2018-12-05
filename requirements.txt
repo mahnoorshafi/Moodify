@@ -15,6 +15,7 @@ pkg-resources==0.0.0
 psycopg2==2.7.5
 requests==2.20.0
 scipy==1.1.0
+selenium==3.141.0
 SQLAlchemy==1.2.13
 urllib3==1.24.1
 Werkzeug==0.14.1
