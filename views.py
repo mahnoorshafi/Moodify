@@ -67,6 +67,7 @@ def playlist():
 
     auth_header = spotify.get_auth_header(token)
 
+    name = request.args.get('name')
     user_mood = request.args.get('mood')
 
     user = db.session.query(User).filter(User.id == username).one()
@@ -80,9 +81,9 @@ def playlist():
     
     audio_feat = mood.standardize_audio_features(user_tracks)
     playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
-    play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
+    play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood, name)
 
-    return render_template('playlist.html', token = token)
+    return render_template('playlist.html', name = name, token = token)
 
 @app.route('/track-info.json')
 def track_info():

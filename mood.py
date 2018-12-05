@@ -213,13 +213,13 @@ def select_tracks(user_audio_features, mood):
     
     return set(playlist_tracks)
 
-def create_playlist(auth_header, user_id, playlist_tracks, mood):
+def create_playlist(auth_header, user_id, playlist_tracks, mood, playlist_name):
     """ Create playlist and add tracks to playlist. """
 
-    mood_num = f'Mood {mood}'
+    name = f'{playlist_name}'
 
     payload = { 
-        'name' : mood_num,
+        'name' : name,
         'description': 'Mood generated playlist'
         }
 
