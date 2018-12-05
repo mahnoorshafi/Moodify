@@ -16,7 +16,6 @@ SPOTIFY_API_URL='{}/{}'.format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
 CLIENT_SIDE_URL='http://localhost/'
-PORT=5000
 
 auth_query_parameters = {
     'response_type': 'code',
