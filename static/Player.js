@@ -36,13 +36,11 @@ class Player extends React.Component {
             this.player.on('ready', async data => {
                 let { device_id } = data;
                 console.log("Let the music play on!");
-                // set the deviceId variable, then let's try
-                // to swap music playback to *our* player
             });
         }
     }
 
-    play = ({
+    play  = ({
           spotify_uri,
           playerInstance: {
             _options: {
@@ -61,15 +59,15 @@ class Player extends React.Component {
             });
         }
 
-    togglePlay = (e) => {
-        this.player.togglePlay()
+    togglePlay = () => {
+        this.player.togglePlay();
     }
 
-    goToNextSong = (e) => {
+    goToNextSong = () => {
         this.props.nextSong();
     }
 
-    goToPreviousSong = (e) => {
+    goToPreviousSong = () => {
         this.props.previousSong();
     }
 
@@ -78,7 +76,7 @@ class Player extends React.Component {
         if (this.props.songToPlay !== prevProps.songToPlay) {
             this.play ({
                 playerInstance: this.player,
-                spotify_uri: this.props.songToPlay,
+                spotify_uri: this.props.songToPlay
             });
         }
     }

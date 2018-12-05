@@ -4,6 +4,15 @@ class App extends React.Component {
             playlistTracks: []
         }
 
+    componentDidMount () {
+        fetch(`/track-info.json`)
+        .then(res => res.json())
+        .then(data => {
+        this.setState({ playlistTracks: data.tracks });
+        })
+        .catch(err => this.setState({ playlistTracks: "Something went wrong" }));
+    }
+
     updateTrack = (track) => {
         let currentlyPlaying = this.state.trackPlaying;
         if (currentlyPlaying !== track) {
@@ -13,16 +22,23 @@ class App extends React.Component {
 
     nextTrack = () => {
         let currentlyPlaying = this.state.trackPlaying;
-        let indexCurrentlyPlaying = this.props.tracks.indexOf(currentlyPlaying)
-        let nextTrack = this.props.tracks[indexCurrentlyPlaying + 1]
-        this.setState({trackPlaying: nextTrack})
+        let indexCurrentlyPlaying = this.state.playlistTracks.indexOf(currentlyPlaying)
+        let nextTrack = this.state.playlistTracks[indexCurrentlyPlaying + 1]
+        this.setState({trackPlaying: nextTrack.uri})
     }
 
-    previousTrack = () => {
+    previousTrack =() => {
         let currentlyPlaying = this.state.trackPlaying;
-        let indexCurrentlyPlaying = this.props.tracks.indexOf(currentlyPlaying)
-        let previousTrack = this.props.tracks[indexCurrentlyPlaying - 1]
-        this.setState({trackPlaying: previousTrack})
+        let indexCurrentlyPlaying = this.state.playlistTracks.indexOf(currentlyPlaying)
+        if (indexCurrentlyPlaying >= 0) { 
+            let previousTrack = this.state.playlistTracks[indexCurrentlyPlaying - 1]
+            console.log(previousTrack)
+            this.setState({trackPlaying: previousTrack.uri})
+        } else {
+            let previousTrack = this.state.playlistTracks[0]
+            this.setState({trackPlaying: previousTrack.uri})
+        }   
+
     }
 
     render() {
@@ -33,13 +49,12 @@ class App extends React.Component {
                 songToPlay={this.state.trackPlaying}
                 nextSong={this.nextTrack}
                 previousSong={this.previousTrack}
-                tracks={this.props.tracks}  />
+                tracks={this.props.playlistTracks} />
 
                 <Playlist
                 updateTrack={this.updateTrack}
                 songPlaying={this.state.trackPlaying} 
-                tracks={this.props.tracks}
-                trackInfo={this.props.trackInfo} />
+                tracks={this.state.playlistTracks} />
             </div>
         )
     }

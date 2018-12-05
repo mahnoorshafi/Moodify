@@ -7,8 +7,8 @@ class Song extends React.Component {
     render() {
         return (
             <button
-                value={this.props.track} 
-                onClick={this.selectSong}> {this.props.track}
+                value={this.props.uri}
+                onClick ={this.selectSong}> {this.props.track}
             </button>
         );
     }
