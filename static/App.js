@@ -22,23 +22,20 @@ class App extends React.Component {
 
     nextTrack = () => {
         let currentlyPlaying = this.state.trackPlaying;
-        let indexCurrentlyPlaying = this.state.playlistTracks.indexOf(currentlyPlaying)
+        let indexCurrentlyPlaying = this.state.playlistTracks.findIndex(track => {
+                return track.uri === currentlyPlaying;
+        });
         let nextTrack = this.state.playlistTracks[indexCurrentlyPlaying + 1]
         this.setState({trackPlaying: nextTrack.uri})
     }
 
-    previousTrack =() => {
+    previousTrack = () => {
         let currentlyPlaying = this.state.trackPlaying;
-        let indexCurrentlyPlaying = this.state.playlistTracks.indexOf(currentlyPlaying)
-        if (indexCurrentlyPlaying >= 0) { 
-            let previousTrack = this.state.playlistTracks[indexCurrentlyPlaying - 1]
-            console.log(previousTrack)
-            this.setState({trackPlaying: previousTrack.uri})
-        } else {
-            let previousTrack = this.state.playlistTracks[0]
-            this.setState({trackPlaying: previousTrack.uri})
-        }   
-
+        let indexCurrentlyPlaying = this.state.playlistTracks.findIndex(track => {
+                return track.uri === currentlyPlaying;
+        });
+        let nextTrack = this.state.playlistTracks[indexCurrentlyPlaying - 1]
+        this.setState({trackPlaying: nextTrack.uri})
     }
 
     render() {
