@@ -8,7 +8,7 @@ from flask import request, flash, session
 from model import User, Track, Playlist, PlaylistTrack, db, connect_to_db
 
 def get_user_authorization():
-    """ User Authorization """
+    """ Return user authorization url. """
 
     url_args = '&'.join(['{}={}'.format(key,urllib.parse.quote(val)) for key,val in auth_query_parameters.items()])
     auth_url = '{}/?{}'.format(SPOTIFY_AUTH_URL, url_args)
@@ -67,7 +67,7 @@ def get_user_id(auth_header):
 
 
 def get_spotify_data(request, auth_header):
-    """ Return data from Spotify get request """
+    """ Return data from Spotify get request with error handling """
 
     data = requests.get(request, headers = auth_header)
 
@@ -100,7 +100,7 @@ def get_spotify_data(request, auth_header):
 
 
 def post_spotify_data(request, auth_header):
-    """ Return data from Spotify post request """
+    """ Return data from Spotify post request with error handling. """
 
     data = requests.post(request, headers = auth_header)
 

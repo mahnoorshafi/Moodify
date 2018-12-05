@@ -31,7 +31,9 @@ def authorization():
 
 @app.route('/mood')
 def get_user_mood():
-    """ Get user's current mood"""
+    """ Get user's current mood. 
+
+    Add User to database and save user's artists to session. """
 
     response_data = spotify.get_tokens()
 
@@ -80,11 +82,11 @@ def playlist():
     playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
     play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood)
 
-    return render_template('playlist.html', playlist_tracks = list(playlist_tracks), token = token)
+    return render_template('playlist.html', token = token)
 
 @app.route('/track-info.json')
 def track_info():
-    """ Return dictionary containing track name as key and track uri as value """
+    """ Return jsonified dictionary containing track name as key and track uri as value """
 
     track_info = []
 
@@ -100,12 +102,11 @@ def track_info():
 
         track_name = track.name
 
-        track_data = {'track_name' : track_name,
-                      'track_uri' : track_uri}
+        track_data = {'name' : track_name,
+                      'uri' : track_uri}
 
         track_info.append(track_data)
 
-    print(track_info)
     return jsonify({'tracks' : track_info})
 
 @app.route('/logout')

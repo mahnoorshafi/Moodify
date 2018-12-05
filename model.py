@@ -40,7 +40,7 @@ class Track(db.Model):
 
 
 class UserTrack(db.Model):
-    """ Tracks for a user """
+    """ All tracks for a user """
 
     __tablename__ = 'user_track'
 
@@ -68,7 +68,7 @@ class Playlist(db.Model):
 
 
 class PlaylistTrack(db.Model):
-    """ Tracks in playlist """
+    """ Tracks in a certain playlist """
 
     __tablename__ = 'playlist_track'
 

@@ -39,7 +39,7 @@ def get_top_artists(auth_header, num_entities):
 
 
 def get_related_artists(auth_header, top_artists):
-    """ Return list of related artists using users top artist """
+    """ Return list of related artists using users number one top artist """
 
     new_artists = []
 
@@ -59,7 +59,10 @@ def get_related_artists(auth_header, top_artists):
 
 
 def get_top_tracks(auth_header, artists):
-    """ Get top tracks of artists """
+    """ Return list containing 10 track ids per artist.
+
+    Add tracks to Track model as well as to UserTrack model
+    to associate them with the user. """
 
     top_tracks = []
 
@@ -105,7 +108,10 @@ def cluster_ids(top_tracks, n = 100):
 
 
 def add_and_get_user_tracks(auth_header, clustered_tracks):
-    """ Add audio features of user's top tracks to database and return list of users track objects """
+    """ Get three audio features for tracks: danceability, energy, valence.
+
+    Add audio features to Track model and delete those that don't have audio
+    features. Return list of tracks associated with user.  """
 
     track_audio_features = []
 
@@ -146,7 +152,9 @@ def add_and_get_user_tracks(auth_header, clustered_tracks):
     return user_tracks
 
 def standardize_audio_features(user_tracks):
-    """ Return dictionary of standardized audio features """
+    """ Return dictionary of standardized audio features. 
+
+    Dict = Track Uri: {Audio Feature: Cumulative Distribution} """
 
     user_tracks_valence = list(map(lambda track: track.valence, user_tracks))
     valence_array = np.array(user_tracks_valence)
@@ -176,7 +184,7 @@ def standardize_audio_features(user_tracks):
     return user_audio_features
 
 def select_tracks(user_audio_features, mood):
-    """ Return set of spotify track uri's to add to playlist """
+    """ Return set of spotify track uri's to add to playlist based on mood. """
 
     selected_tracks = []
 
@@ -206,7 +214,7 @@ def select_tracks(user_audio_features, mood):
     return set(playlist_tracks)
 
 def create_playlist(auth_header, user_id, playlist_tracks, mood):
-    """ Creates playlist based on mood with selected tracks """
+    """ Create playlist and add tracks to playlist. """
 
     mood_num = f'Mood {mood}'
 
@@ -230,8 +238,7 @@ def create_playlist(auth_header, user_id, playlist_tracks, mood):
 
 
     for track in playlist_tracks:
-        playlist_track_exist = db.session.query(PlaylistTrack).filter(PlaylistTrack.playlist_id == playlist_id, 
-                                                            PlaylistTrack.track_uri == track).all()
+        playlist_track_exist = db.session.query(PlaylistTrack).filter(PlaylistTrack.playlist_id == playlist_id, PlaylistTrack.track_uri == track).all()
         if not playlist_track_exist:
             new_playlist_track = PlaylistTrack(playlist_id = playlist_id, track_uri = track)
             db.session.add(new_playlist_track)
