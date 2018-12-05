@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Homepage{% endblock %}
+{% block title %}Moodify{% endblock %}
 
 {% block content %}
+    
+    <div class="container-fluid text-center light-text">
 
-    <h1>Welcome!</h1>
+        <h1>Moodify</h1>
 
-    <button 
-        class="btn" id="login" onclick="location.href = '/spotify-auth'">Login to Spotify
-    </button>
+            <button 
+                class="btn" id="login" onclick="location.href = '/spotify-auth'">
+                    Login
+            </button>
+    </div>
 
 {% endblock %}
