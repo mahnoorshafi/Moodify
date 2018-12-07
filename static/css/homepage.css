@@ -16,21 +16,12 @@
     color: pink;
 }
 
-.main {
-    font-size: 400%;
-    max-width: 500px;
+.centered {
+    font-size: 1000%;
     margin: auto;
     color:pink;
-    position: relative;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
 }
 
-#moodify {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+.main {
+    margin-top: 200px;
 }

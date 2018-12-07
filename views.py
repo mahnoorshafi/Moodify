@@ -22,12 +22,21 @@ def homepage():
     else:
         return render_template('homepage.html')
 
+
 @app.route('/spotify-auth')
 def authorization():
     """ Spotify Authorization Page """
 
     auth_url = spotify.get_user_authorization()
     return redirect(auth_url)
+
+
+@app.route('/about')
+def about():
+    """ About page with description about app """
+
+    return render_template('about.html')
+
 
 @app.route('/mood')
 def get_user_mood():
@@ -58,6 +67,7 @@ def get_user_mood():
 
     return render_template('mood.html')
 
+
 @app.route('/playlist')
 def playlist():
     """ Take user to spotify web player with created playlist """
@@ -77,13 +87,14 @@ def playlist():
         user_artists = session.get('artists')
         top_tracks = mood.get_top_tracks(auth_header, user_artists)
         cluster = mood.cluster_ids(top_tracks)
-        mood.add_and_get_user_tracks(auth_header, cluster)
+        user_tracks = mood.add_and_get_user_tracks(auth_header, cluster)
     
     audio_feat = mood.standardize_audio_features(user_tracks)
     playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
     play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood, name)
 
     return render_template('playlist.html', name = name, token = token)
+
 
 @app.route('/track-info.json')
 def track_info():
@@ -94,7 +105,6 @@ def track_info():
     user_playlist = session.get('playlist')
 
     playlist_tracks = db.session.query(PlaylistTrack).filter(PlaylistTrack.playlist_id == user_playlist).all()
-    print(playlist_tracks)
 
     for track in playlist_tracks:
         track_uri = track.track_uri
@@ -109,6 +119,7 @@ def track_info():
         track_info.append(track_data)
 
     return jsonify({'tracks' : track_info})
+
 
 @app.route('/logout')
 def logout():
