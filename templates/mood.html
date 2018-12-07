@@ -4,15 +4,41 @@
 
 {% block content %}
     
-    <form action = '/playlist'>
-        Playlist Name: 
-        <input type='text' id='name' name="name">
+    <div> Create your playlist! </div>
+    <form action = '/playlist'>Name: 
+        <input type='text' id='name' name="name" required>
 
-    <form action = '/playlist'>
-        What is your mood? <i>0-1.0</i> 
-        <input type='number' id='mood' name='mood' step='0.001' min='0' max='1' required>
-        
+    <img class="icon" src="../static/images/moodify.png" height="100" width="100">
+
+    <div class='slidecontainer'>
+        <form action='/playlist'>
+            What is your mood? 
+            <i>0-1.0</i> 
+            <input type='range' class='slider' id='mood' name='mood' value= '0.5' step='0.01' min='0' max='1' required>
+
         <input type="submit">
-    </form>
+    </div>
 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+
+    const mood = $("#mood");
+    const icon = $("img");
+
+    mood.on("input", (e) => {
+        let moodValue = parseFloat(mood.val());
+
+        if (moodValue <= 0.15) {
+            icon.attr("src", "../static/images/depressed.png");
+        } else if (moodValue <= 0.50) {
+            icon.attr("src", "../static/images/sad.png");
+        } else if (moodValue <= 0.85) {
+            icon.attr("src", "../static/images/happy.png");
+        } else {
+
+            icon.attr("src", "../static/images/elated.png"); 
+        }
+    }); 
+    
+</script>
 {% endblock %}

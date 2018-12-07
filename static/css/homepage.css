@@ -1,4 +1,36 @@
-html, body { 
-       background-color: #212529; /* Light Gray */
-       color: #fff;
-    }
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-custom {
+    background-color: #000000;
+    border-color: #00000;
+    height: 40px;
+}
+
+.nav-link:link {
+    margin-right: 1em;
+    padding-top: 1em;
+    font-size: 150%;
+    color: pink;
+}
+
+.main {
+    font-size: 400%;
+    max-width: 500px;
+    margin: auto;
+    color:pink;
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+#moodify {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

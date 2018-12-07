@@ -1,3 +1,5 @@
 html, body { 
-       background-color:#212529 /* Light Gray */
-    }
+   background-color: #000000; /* Black */
+   color: #fff;
+   font-family: 'Fjalla One', sans-serif;
+}
