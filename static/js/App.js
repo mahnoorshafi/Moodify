@@ -40,20 +40,25 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
-                <Player
-                accessToken={this.props.token}
-                songToPlay={this.state.trackPlaying}
-                nextSong={this.nextTrack}
-                previousSong={this.previousTrack}
-                tracks={this.props.playlistTracks}
-                name={this.props.name} />
-
-                <Playlist
-                updateTrack={this.updateTrack}
-                songPlaying={this.state.trackPlaying} 
-                tracks={this.state.playlistTracks} />
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-sm-6">
+                        <Player
+                        accessToken={this.props.token}
+                        songToPlay={this.state.trackPlaying}
+                        nextSong={this.nextTrack}
+                        previousSong={this.previousTrack}
+                        tracks={this.props.playlistTracks} />
+                    </div>
+                    <div className="col-sm-6">
+                        <Playlist
+                        updateTrack={this.updateTrack}
+                        songPlaying={this.state.trackPlaying} 
+                        tracks={this.state.playlistTracks}
+                        name={this.props.name} />
+                    </div>
+                </div>
             </div>
         )
-    }
+    };
 }

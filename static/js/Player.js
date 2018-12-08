@@ -94,14 +94,13 @@ class Player extends React.Component {
                 artistName = this.state.currentTrack.track_window.current_track.artists.map(artist => artist.name).join(", ")
             }
 
-        let albumArt = '';
+        let albumArt = "../static/images/turntable.jpeg";
             if (this.state.currentTrack) {
                 albumArt = this.state.currentTrack.track_window.current_track.album.images[0].url;
             }
 
         return (<div>
-            <p> Playlist: {this.props.name} </p>
-            <img src={albumArt}></img>
+            <img src={albumArt} height="300" width="350"></img>
             <p> Track: {trackName} </p>
             <p> Artist(s): {artistName} </p>
 

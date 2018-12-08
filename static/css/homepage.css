@@ -1,8 +1,3 @@
-* {
-  padding: 0;
-  margin: 0;
-}
-
 .navbar-custom {
     background-color: #000000;
     border-color: #00000;
@@ -10,9 +5,9 @@
 }
 
 .nav-link:link {
-    margin-right: 1em;
+    padding-right: 1em;
     padding-top: 1em;
-    font-size: 150%;
+    font-size: 125%;
     color: pink;
 }
 
