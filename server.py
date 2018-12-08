@@ -5,7 +5,7 @@ from model import connect_to_db
 
 if __name__ == '__main__':
     app.secret_key = 'SECRETSECRETSECRET'
-    app.debug = True
+    app.debug = False
     connect_to_db(app)
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     DebugToolbarExtension(app)
