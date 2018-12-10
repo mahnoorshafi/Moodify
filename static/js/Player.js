@@ -18,6 +18,22 @@ class Player extends React.Component {
                 volume: 0.5
             });
 
+            this.player.addListener('initialization_error', ({ message }) => { 
+                console.error(message); 
+            });
+
+            this.player.addListener('authentication_error', ({ message }) => { 
+                console.error(message); 
+            });
+
+            this.player.addListener('account_error', ({ message }) => { 
+                console.error(message); 
+            });
+
+            this.player.addListener('playback_error', ({ message }) => { 
+                console.error(message); 
+            });
+
             this.player.addListener('player_state_changed', currentTrack => {
                 this.setState({currentTrack: currentTrack});
                 console.log(currentTrack)

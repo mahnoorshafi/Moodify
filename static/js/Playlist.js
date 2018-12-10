@@ -2,7 +2,7 @@ class Playlist extends React.Component {
     render() {
 
         const songNames = this.props.tracks.map(track => (
-            <Song
+            <Song key={track.url}
             updateTrack = {this.props.updateTrack}
             songPlaying = {this.props.trackPlaying}
             uri={track.uri} 
@@ -12,11 +12,11 @@ class Playlist extends React.Component {
 
         return (
             <div>
-                <p> Playlist: {this.props.name} </p>
+                <h1> Playlist: {this.props.name} </h1>
                     <ul className="playlist">
-                        <li>{songNames}</li>
+                        <span> {songNames} </span>
                     </ul>
             </div>
-        )
+        );
     }
 }

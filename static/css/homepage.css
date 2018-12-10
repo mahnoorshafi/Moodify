@@ -20,3 +20,13 @@
 .main {
     margin-top: 200px;
 }
+
+button#about:hover {
+    background: pink;
+    color:black;
+}
+
+button#login:hover {
+    background: pink;
+    color:black;
+}

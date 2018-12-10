@@ -7,32 +7,34 @@
     <div class="container-fluid text-center">
         <div class="row">
             <div class="col">
-                <div> </div>
+                <h1> WHAT MOOD ARE YOU IN? </h1>
             </div>
         </div>
-            <form action = '/playlist'>
-                <div class="row">
-                    <div class="col ">
-                        <div><img class="icon" src="../static/images/moodify.png" height="500" width="500"></div>
-                    </div>
-                </div>
+            <form action = "/playlist">
                 <div class="row">
                     <div class="col">
-                        <span>Playlist Name: </span>
-                        <input type='text' id='name' name="name" placeholder='Playlist name'  required>
+                        <input type='text' id='name' name="name" placeholder='Name your playlist here' required="true">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <div class='slidecontainer'>
-                            <span> What is your mood? </span>
-                            <input type='range' class='slider' id='mood' name='mood' value= '0.5' step='0.01' min='0' max='1' required>
+                    <div class="row">
+                        <div class="col">
+                            <div><img class="icon" src="../static/images/moodify.png" height="450" width="450"></div>
+                        </div>
+                    </div>
+                    <div class=row">
+                        <div class="col">
+                            <div class='slidecontainer'>
+                                <input type='range' class='slider' id='mood' name='mood' step='0.01' min='0' max='1' required>
+                            </div>
                         </div> 
                     </div>
-                </div>
-                <div class="row">
+                    <div class=row">
+                        <div class="col">
+                            <span> (Drag to select mood) </span>
+                        </div>
+                    </div>
                     <div class="col">
-                        <input type="submit">
+                        <input type="submit" class="btn btn-secondary">
                     </div>
                 </div>
             </form>

@@ -6,10 +6,12 @@ class Song extends React.Component {
 
     render() {
         return (
+            <li>
             <button
                 value={this.props.uri}
                 onClick ={this.selectSong}> {this.props.track}
             </button>
+            </li>
 
         );
     }

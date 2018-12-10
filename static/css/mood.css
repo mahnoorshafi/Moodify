@@ -1,0 +1,72 @@
+.mood {
+  border: none;
+  border-bottom: 2px pink;
+}
+
+h1 {
+    margin: 25px;
+    font-size:70px;
+}
+
+span {
+    margin-left:965px;
+}
+
+.slidecontainer {
+    margin-top: 50px;
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 80%;
+    height: 15px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width:37px;
+    height:37px;
+    border-radius:50%;
+    background:pink;
+    cursor:pointer;
+}
+
+
+input[type=text] {
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 2px pink;
+    background: none;
+    font-size:200%;
+    color:pink;
+    text-align: center;
+    margin-top:-30px;
+    margin-left: 10px;
+}
+
+input.btn.btn-secondary {
+    margin:15px;
+    margin-top:-7px;
+}
+
+img.icon {
+    margin-top: -10px;
+    margin-bottom:-20px;
+}
+
+input.btn.btn-secondary:hover {
+    background: pink;
+    color:black;
+}

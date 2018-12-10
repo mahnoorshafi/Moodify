@@ -1,0 +1,12 @@
+.about {
+    margin-top: 100px;
+    margin-left: 50px;
+    margin-right:50px;
+}
+
+.button:link {
+    padding-right: 1em;
+    padding-top: 2em;
+    font-size: 125%;
+    color: #A9A9A9;
+}
