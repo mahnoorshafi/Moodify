@@ -69,7 +69,7 @@ def get_user_mood():
 
 
 @app.route('/playlist')
-def playlist():
+def playlist_created():
     """ Take user to spotify web player with created playlist """
 
     token = session.get('access_token')
@@ -79,6 +79,8 @@ def playlist():
 
     name = request.args.get('name')
     user_mood = request.args.get('mood')
+
+    session['name'] = name
 
     user = db.session.query(User).filter(User.id == username).one()
     user_tracks = user.tracks
@@ -91,10 +93,20 @@ def playlist():
     
     audio_feat = mood.standardize_audio_features(user_tracks)
     playlist_tracks = mood.select_tracks(audio_feat, float(user_mood))
-    play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood, name)
+    spotify_play = mood.create_playlist(auth_header, username, playlist_tracks, user_mood, name)
+
+    session['spotify'] = spotify_play
+
+    return render_template('created.html', spotify_play = spotify_play)
+
+@app.route('/playlist-player')
+def playlist_player():
+
+    name = session.get('name')
+    token = session.get('access_token')
+    spotify = session.get('spotify')
 
     return render_template('playlist.html', name = name, token = token)
-
 
 @app.route('/track-info.json')
 def track_info():
