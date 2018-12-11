@@ -7,4 +7,5 @@ html, body {
    background-color: #000000; /* Black */
    font-family: 'Fjalla One', sans-serif;
    color: pink;
+    overflow-x: hidden;
 }

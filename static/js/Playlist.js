@@ -12,10 +12,9 @@ class Playlist extends React.Component {
 
         return (
             <div>
-                <h1> Playlist: {this.props.name} </h1>
-                    <ul className="playlist">
-                        <span> {songNames} </span>
-                    </ul>
+                <ul className="playlist-panel">
+                    <span> {songNames} </span>
+                </ul>
             </div>
         );
     }

@@ -41,18 +41,24 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <Player
-                accessToken={this.props.token}
-                songToPlay={this.state.trackPlaying}
-                nextSong={this.nextTrack}
-                previousSong={this.previousTrack}
-                tracks={this.props.playlistTracks} />
-                <Playlist
-                updateTrack={this.updateTrack}
-                songPlaying={this.state.trackPlaying} 
-                tracks={this.state.playlistTracks}
-                name={this.props.name} /> 
-            </div>   
+            <h1 className="playlist-header">{this.props.name} </h1>
+                <div className="row">
+                    <div className="col">
+                        <Player
+                        accessToken={this.props.token}
+                        songToPlay={this.state.trackPlaying}
+                        nextSong={this.nextTrack}
+                        previousSong={this.previousTrack}
+                        tracks={this.props.playlistTracks} />
+                    </div>
+                    <div className="col">
+                        <Playlist
+                        updateTrack={this.updateTrack}
+                        songPlaying={this.state.trackPlaying} 
+                        tracks={this.state.playlistTracks} /> 
+                    </div>
+                </div> 
+            </div> 
         )
     };
 }

@@ -18,27 +18,6 @@ class Player extends React.Component {
                 volume: 0.5
             });
 
-            this.player.addListener('initialization_error', ({ message }) => { 
-                console.error(message); 
-            });
-
-            this.player.addListener('authentication_error', ({ message }) => { 
-                console.error(message); 
-            });
-
-            this.player.addListener('account_error', ({ message }) => { 
-                console.error(message); 
-            });
-
-            this.player.addListener('playback_error', ({ message }) => { 
-                console.error(message); 
-            });
-
-            this.player.addListener('player_state_changed', currentTrack => {
-                this.setState({currentTrack: currentTrack});
-                console.log(currentTrack)
-            });
-
             this.player.addListener('not_ready', ({ device_id }) => {
                 console.log('Device ID is not ready for playback', device_id);
             });
@@ -53,9 +32,14 @@ class Player extends React.Component {
                 let { device_id } = data;
                 console.log("Let the music play on!");
             });
-        }
-    }
 
+            this.player.addListener('player_state_changed', currentTrack => {
+                this.setState({currentTrack: currentTrack});
+                console.log(currentTrack)
+            });
+        };
+    }
+ 
     play  = ({
           spotify_uri,
           playerInstance: {
@@ -95,16 +79,16 @@ class Player extends React.Component {
                 spotify_uri: this.props.songToPlay
             });
         }
-    }
-
+    } 
+ 
     render() {
 
-        let trackName = "Track";
+        let trackName = "";
             if (this.state.currentTrack) {
                 trackName = this.state.currentTrack.track_window.current_track.name;
             }
 
-        let artistName = "Artist";
+        let artistName = "";
             if (this.state.currentTrack) {
                 // artistName = this.state.currentTrack.track_window.current_track.artists[0].name
                 artistName = this.state.currentTrack.track_window.current_track.artists.map(artist => artist.name).join(", ")
@@ -116,15 +100,21 @@ class Player extends React.Component {
             }
 
         return (<div>
-            <img src={albumArt} height="300" width="350"></img>
-            <p> Track: {trackName} </p>
-            <p> Artist(s): {artistName} </p>
+            <img className="album" src={albumArt} height="400" width="460"></img>
 
+            <p></p>
 
-            <button onClick={this.goToPreviousSong}> Previous </button>
-            <button onClick={this.togglePlay}> Play </button>
-            <button onClick={this.goToNextSong}> Next </button>
+            <button id="button_bw" className="btn" onClick={this.goToPreviousSong}>
+                    <i className="fa fa-backward"></i></button>
 
+            <button id="button_play" className="btn" onClick={this.togglePlay}>
+                    <i className="fa fa-play"></i></button>
+
+            <button id="button_fw" className="btn" onClick={this.goToNextSong}>
+                    <i className="fa fa-forward"></i></button>
+
+            <p className="track"> Track: {trackName} </p>
+            <p className="artists"> Artist(s): {artistName} </p>
             </div>
         );
     }

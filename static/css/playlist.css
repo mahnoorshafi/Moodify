@@ -1,3 +1,123 @@
-.playlist {
-    list-style-type: none;
+h1.playlist-header {
+    text-align: center;
+    font-size: 60px;
+    color:pink;
 }
+
+.playlist-panel {
+    list-style-type: none;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 600px;
+    height: 600px;
+    margin-top: 10px;
+}
+
+button.btn.btn-secondary.song{
+    color:pink;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    outline:none;
+    font-size: 20px;
+    margin-left: 165px;
+}
+
+.album {
+    border-radius: 30px;
+    margin-left: 220px;
+    margin-top: 75px;
+}
+
+.track {
+    position: fixed;
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: 400px;
+    margin-top: 10px;
+    min-height: 10em;
+    width: 90%;
+    font-size: 120%;
+}
+
+.artists {
+    position: fixed;
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: 400px;
+    margin-top: 45px;
+    min-height: 10em;
+    width: 90%;
+    font-size: 120%;
+
+}
+ 
+#button_bw {
+    margin-left: 390px;
+    font-size: 20px;
+    margin-right: 10px;
+    background: pink;
+    color:black;
+}
+
+#button_play {
+    font-size: 25px;
+    font-size: 20px;
+    margin-right: 10px;
+    background: pink;
+    color:black;
+}
+
+#button_fw {
+    font-size: 20px;
+    margin-right: 10px;
+    background: pink;
+    color:black;
+}
+
+#button_bw:hover {
+    background: grey;
+    color:black;
+}
+
+#button_play:hover {
+    background: grey;
+    color:black;
+}
+
+#button_fw:hover {
+    background: grey;
+    color:black;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: pink; 
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: grey; 
+}
+
+a.logout-button{
+    color:pink;
+    margin-left: 1240px;
+}
+
+a.playlist-button{
+    color:pink;
+}
+
+

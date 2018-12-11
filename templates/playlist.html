@@ -4,18 +4,21 @@
 
 {% block content %}
 
-<b><a href="/" class="button">Create New Playlist</a>
+<div class= "container-fluid">
 
-<b><a href = "/logout" class='"button'>Log Out</a>
+    <a href="/" class="playlist-button">Create New Playlist</a>
+
+    <a href = "/logout" class="logout-button">Log Out</a>
 
 <div id='root'></div>
+
+</div>
 
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
 <script src="../static/js/App.js" type="text/babel"></script>
 <script src="../static/js/Player.js" type="text/babel"></script>
 <script src="../static/js/Playlist.js" type="text/babel"></script>
 <script src="../static/js/Song.js" type="text/babel"></script>
-
 
 <script type="text/babel">
  
@@ -30,5 +33,4 @@ ReactDOM.render(
 );
 
 </script>
-
-{% endblock %}
+{% endblock %} 
