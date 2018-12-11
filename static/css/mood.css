@@ -3,12 +3,12 @@
   border-bottom: 2px pink;
 }
 
-h1 {
+.mood-header {
     margin: 25px;
     font-size:70px;
 }
 
-span {
+.drag {
     margin-left:965px;
 }
 
@@ -43,7 +43,6 @@ span {
     cursor:pointer;
 }
 
-
 input[type=text] {
     margin-bottom: 30px;
     border: none;
@@ -56,7 +55,7 @@ input[type=text] {
     margin-left: 10px;
 }
 
-input.btn.btn-secondary {
+input.btn.btn-secondary.submit {
     margin:15px;
     margin-top:-7px;
 }

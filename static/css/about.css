@@ -1,10 +1,10 @@
-.about {
+.about.page {
     margin-top: 100px;
     margin-left: 50px;
     margin-right:50px;
 }
 
-.button:link {
+.button-back:link {
     padding-right: 1em;
     padding-top: 2em;
     font-size: 125%;
