@@ -70,7 +70,7 @@ def get_user_mood():
 
 @app.route('/playlist')
 def playlist_created():
-    """ Take user to spotify web player with created playlist """
+    """ Create playlist """
 
     token = session.get('access_token')
     username = session.get('user')
@@ -101,6 +101,7 @@ def playlist_created():
 
 @app.route('/playlist-player')
 def playlist_player():
+    """ Take user to moodify web player with created playlist """
 
     name = session.get('name')
     token = session.get('access_token')
