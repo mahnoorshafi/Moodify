@@ -41,7 +41,7 @@ class App extends React.Component {
     render() {
         return (
             <div>
-            <h1 className="playlist-header">{this.props.name} </h1>
+            <h1 className="playlist-header"><b>{this.props.name}</b></h1>
                 <div className="row">
                     <div className="col">
                         <Player
