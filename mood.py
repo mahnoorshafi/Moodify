@@ -14,7 +14,7 @@ def get_top_artists(auth_header, num_entities):
 
     artists = []
 
-    term = ['long_term', 'medium_term', 'short_term']
+    term = ['long_term', 'medium_term']
 
     for length in term:
         request = f'{SPOTIFY_API_URL}/me/top/artists?time_range={length}&limit={num_entities}'
