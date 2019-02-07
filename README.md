@@ -15,8 +15,8 @@ Once authorized, Moodify gathers and stores a users listening history in a Postg
 
 <a name="techstack"/></a>
 ## Tech Stack
-**Backend:** ReactJS, Javascript, Jinja, jQuery, Bootstrap</br>
-**Frontend:** Python, Flask, SQLAlchemy, PostgreSQL<br/>
+**Frontend:** ReactJS, Javascript, Jinja, jQuery, Bootstrap</br>
+**Backend:** Python, Flask, SQLAlchemy, PostgreSQL<br/>
 **Libraries:** Scipy, Numpy<br/>
 **APIs:** Spotify<br/>
 
